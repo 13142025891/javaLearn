@@ -11,8 +11,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class JdbcTemplateDemo1 {
     public static void main(String[] args) {
         JdbcTemplate template=new JdbcTemplate(JdbcUtils.getDataSource());
-        var sql="update student set score=166 where id= ?";
-        var r=template.update(sql,1);
+        String sql="update student set score=166 where id= ?";
+        int r=template.update(sql,1);
 
 
         //.query()

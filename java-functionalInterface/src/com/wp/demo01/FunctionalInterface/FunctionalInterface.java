@@ -1,5 +1,6 @@
 package com.wp.demo01.FunctionalInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,10 +9,8 @@ import java.util.List;
  * @Date: Create in 21:17 2020/6/2
  */
 public class FunctionalInterface {
-
-
     public void a(){
-        List<String>  list= List.of("1");
+        List<String>  list= new ArrayList<>();
         list.stream();
     }
 }

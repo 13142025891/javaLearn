@@ -16,14 +16,14 @@ public class DruidDemo2 {
         Connection con = null;
         try {
             con = JdbcUtils.getConnection();
-            var sql = "insert into student VALUES(null,?,14,500,?,null)";
+            String sql = "insert into student VALUES(null,?,14,500,?,null)";
 
             stmt = con.prepareStatement(sql);
             stmt.setString(1, "大神");
-            var dt = new java.util.Date();
+            Date dt = new java.util.Date();
             stmt.setDate(2, new java.sql.Date(dt.getTime()));
 
-            var r = stmt.executeUpdate();
+            int r = stmt.executeUpdate();
             System.out.println(r);
         } catch (SQLException e) {
             e.printStackTrace();

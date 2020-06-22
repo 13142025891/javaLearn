@@ -3,6 +3,7 @@ package com.wp.datasource.c3p0;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -16,7 +17,7 @@ public class C3p0Demo2 {
         DataSource ds=new ComboPooledDataSource();
 
         for (int i = 0; i < 11; i++) {
-            var con=ds.getConnection();
+            Connection con=ds.getConnection();
             System.out.println(i+":"+con);
             if(i==5){
                 con.close();

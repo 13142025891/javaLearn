@@ -14,10 +14,10 @@ public class JdbcDemo2 {
         ResultSet r = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            var sql = "insert into student VALUES(null,'李留',14,500,CURRENT_DATE,null)";
+            String sql = "insert into student VALUES(null,'李留',14,500,CURRENT_DATE,null)";
             con = DriverManager.getConnection("jdbc:mysql:///db1", "root", "123");
             stmt = con.createStatement();
-            var result = stmt.executeUpdate(sql);
+            int result = stmt.executeUpdate(sql);
             System.out.println("insert:" + result);
             sql = "update student set score=200 where id=1";
             result = stmt.executeUpdate(sql);
@@ -33,7 +33,7 @@ public class JdbcDemo2 {
             }
 
             sql="select * from user where username =?";
-            var pstmt=con.prepareStatement(sql);
+            PreparedStatement pstmt=con.prepareStatement(sql);
             pstmt.setString(1, "lisi");
 
             r = pstmt.executeQuery();

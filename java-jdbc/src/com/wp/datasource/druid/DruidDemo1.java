@@ -2,7 +2,10 @@ package com.wp.datasource.druid;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 
+import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
 import java.util.Properties;
 
 /**
@@ -13,13 +16,13 @@ import java.util.Properties;
 public class DruidDemo1 {
     public static void main(String[] args) {
         Properties pro = new Properties();
-        var is = DruidDemo1.class.getClassLoader().getResourceAsStream(
+       InputStream is = DruidDemo1.class.getClassLoader().getResourceAsStream(
                 "druid.properties"
         );
         try {
             pro.load(is);
-            var ds = DruidDataSourceFactory.createDataSource(pro);
-            var con = ds.getConnection();
+            DataSource ds = DruidDataSourceFactory.createDataSource(pro);
+            Connection con = ds.getConnection();
             System.out.println(con);
 
         } catch (Exception e) {

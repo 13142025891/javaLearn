@@ -2,6 +2,7 @@ package com.wp.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
 
 /**
  * @Author: WuPna
@@ -20,9 +21,9 @@ public class JdbcDemo1 {
         //定义sql
         String sql = "update student set score=600 where id = 1 ";
         //获取执行sql的对象  返回值是修改的行数
-        var stmt = con.createStatement();
+        Statement stmt = con.createStatement();
         //处理结果
-        var count=stmt.executeUpdate(sql);
+        int count=stmt.executeUpdate(sql);
         System.out.println(count);
         //释放资源
         stmt.close();
