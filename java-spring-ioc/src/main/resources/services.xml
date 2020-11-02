@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="userService" class="com.wp.springioc.service.UserService">
+        <!--指定使用其他bean-->
+        <!--<constructor-arg ref="userService"/>-->
+        <!--指定参数索引来注入-->
+        <!--<constructor-arg index="0" value="wupan"/>-->
+        <!--指定参数名称来注入 @ConstructorProperties-->
+        <!--<constructor-arg name="name" value="wupan"/>-->
+
+        <!--指定参数类型来注入，类型的注入-->
+        <!-- <constructor-arg type="java.lang.String" value="wupan"/>
+         <constructor-arg type="java.lang.String" value="zuqiu"/>-->
+
+       <constructor-arg name="name" value="wupan"/>
+        <constructor-arg name="hobby" value="zuqiu"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.wp.mybatis.dao.IUserDao">
+    <insert id="saveUser" parameterType="com.wp.mybatis.domain.User">
+        <selectKey keyProperty="id" keyColumn="id" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        insert into user(username,address,sex,birthday)
+        values(#{username},#{address},#{sex},#{birthday})
+    </insert>
+    <update id="updateUser">
+        update user set username=#{username}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteUser" parameterType="integer">
+        delete from user where id=#{id}
+    </delete>
+
+     <!--配置查询所有-->
+    <!--id：不能随便写，必须写dao对应的方法名称-->
+    <select id="findAll" resultType="com.wp.mybatis.domain.User">
+        select * from user
+    </select>
+    <select id="findByid" resultType="com.wp.mybatis.domain.User" parameterType="INT">
+        select * from user where id=#{id}
+    </select>
+    <select id="findByName" resultType="com.wp.mybatis.domain.User" parameterType="string">
+         select * from user where username like #{un}
+            <!--select * from user where username like '%${value}%'-->
+    </select>
+    <select id="findTotal" resultType="java.lang.Integer">
+        select count(1) from user
+    </select>
+    <select id="findByVo" resultType="java.lang.Integer" parameterType="com.wp.mybatis.domain.QueryVo">
+        select * from user where username like #{user.username}
+    </select>
+
+</mapper>

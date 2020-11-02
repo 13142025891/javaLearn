@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--导入外部beans 文件，对于打的项目非常有用，拆分更细粒度-->
+    <!--导入路劲已当前文件为目标-->
+    <import resource="services.xml"/>
+
+   <!-- <import resource="resources/services.xml"/>
+    <import resource="/resources/services.xml"/>-->
+
+    <!--不建议的方式，如果改变了类路径会怎样？-->
+    <!--<import resource="classpath:../services.xml"/>-->
+    <!--耦合于特定系统绝对路径，对于这种绝对位置，通常更可取的做法是保持间接性ーー例如，
+    通过在运行时根据 JVM 系统属性解析的“ ${ ... }”占位符-->
+    <!--<import resource="classpath:/config/services.xml"/>
+    <import resource="file:C:/config/services.xml"/>-->
+
+    <!--id 标识单个bean定义的字符串
+    class 为bean类型的完全限定类名-->
+    <bean id="userController" class="com.wp.springioc.UserController">
+        <constructor-arg ref="userService"/>
+        <!-- collaborators and configuration for this bean go here -->
+    </bean>
+
+    <bean id="orderService" class="com.wp.springioc.service.UserService" factory-method="createInstance">
+        <!-- collaborators and configuration for this bean go here -->
+    </bean>
+
+    <!-- more bean definitions go here -->
+
+</beans>
