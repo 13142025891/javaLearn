@@ -7,7 +7,7 @@
     <bean id="userService" class="com.wp.springioc.service.UserService">
         <!--指定使用其他bean-->
         <!--<constructor-arg ref="userService"/>-->
-        <!--指定参数索引来注入-->
+        <!--指定参数索引来注入,从0开始-->
         <!--<constructor-arg index="0" value="wupan"/>-->
         <!--指定参数名称来注入 @ConstructorProperties-->
         <!--<constructor-arg name="name" value="wupan"/>-->

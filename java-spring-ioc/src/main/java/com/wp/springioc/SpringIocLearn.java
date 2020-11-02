@@ -29,7 +29,7 @@ public class SpringIocLearn {
 
     }
 
-    public static void ShowBeans(ApplicationContext context){
+    public static void ShowBeans(ApplicationContext context) {
         System.out.println(Arrays.toString(context.getBeanDefinitionNames()));
     }
 }
