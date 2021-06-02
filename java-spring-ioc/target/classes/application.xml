@@ -8,8 +8,8 @@
     <!--导入路劲已当前文件为目标-->
     <import resource="services.xml"/>
 
-   <!-- <import resource="resources/services.xml"/>
-    <import resource="/resources/services.xml"/>-->
+    <!-- <import resource="resources/services.xml"/>
+     <import resource="/resources/services.xml"/>-->
 
     <!--不建议的方式，如果改变了类路径会怎样？-->
     <!--<import resource="classpath:../services.xml"/>-->
@@ -21,8 +21,20 @@
     <!--id 标识单个bean定义的字符串
     class 为bean类型的完全限定类名-->
     <bean id="userController" class="com.wp.springioc.UserController">
+        <!--第一种写法-->
         <constructor-arg ref="userService"/>
-        <!-- collaborators and configuration for this bean go here -->
+        <!--第二种-->
+        <!--<constructor-arg>
+            <ref bean="userService"/>
+        </constructor-arg>-->
+
+        <!--第一种写法-->
+        <property name="orderService">
+            <ref bean="orderService"/>
+        </property>
+        <!--第二种-->
+        <!--  <property name="orderService" ref="orderService">
+          </property>-->
     </bean>
 
     <bean id="orderService" class="com.wp.springioc.service.UserService" factory-method="createInstance">
@@ -30,5 +42,13 @@
     </bean>
 
     <!-- more bean definitions go here -->
+
+    <!--depends-on-->
+    <bean id="depends-A" class="com.wp.springioc.dependson.A" depends-on="depends-b">
+
+</bean>
+    <bean id="depends-b" class="com.wp.springioc.dependson.B" >
+
+    </bean>
 
 </beans>
