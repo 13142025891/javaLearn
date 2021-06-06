@@ -43,4 +43,13 @@
 
     <!-- more bean definitions go here -->
 
+    <!--depends-on-->
+    <bean id="depends-A" class="com.wp.springioc.dependson.A" depends-on="depends-b">
+
+    </bean>
+
+    <bean id="depends-b" class="com.wp.springioc.dependson.B" >
+
+    </bean>
+
 </beans>
