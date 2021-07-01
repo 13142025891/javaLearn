@@ -1,9 +1,6 @@
 package com.wp.basic.webL.httpL.basic;
 
-import org.apache.commons.*;
 import org.apache.commons.lang3.StringUtils;
-
-import javax.sound.midi.Soundbank;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -64,9 +61,14 @@ class  Handler extends  Thread{
         Writer writer=new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
 
         boolean requestOk=false;
+        boolean png=false;
         String first=reader.readLine();
         if(first.startsWith("GET / HTTP/1.")){
             requestOk=true;
+        }
+        if(first.startsWith("GET /favicon.ico HTTP/1.")){
+            requestOk=true;
+            png=true;
         }
         for (;;){
             String header = reader.readLine();
@@ -83,15 +85,44 @@ class  Handler extends  Thread{
             writer.flush();
         }
         else{
-            String data="<html><body><h1>Hello, world!</h1></body></html>";
-            int length=data.getBytes(StandardCharsets.UTF_8).length;
-            writer.write("HTTP/1.0 200 OK\r\n");
-            writer.write("Connection: close\r\n");
-            writer.write("Content-Type: text/html\r\n");
-            writer.write("Content-Length: " + length + "\r\n");
-            writer.write("\r\n"); // 空行标识Header和Body的分隔
-            writer.write(data);
-            writer.flush();
+            if(png){
+                try(InputStream inputs = Server.class.getResourceAsStream("/favicon.ico")){
+                    if(inputs!=null){
+                        try(ByteArrayOutputStream output = new ByteArrayOutputStream()){
+                            byte[] buffer = new byte[1024*4];
+                            int n = 0;
+                            while (-1 != (n = inputs.read(buffer))) {
+                                output.write(buffer, 0, n);
+
+                            }
+                            writer.write("HTTP/1.0 200 OK\r\n");
+                            writer.write("Connection: close\r\n");
+                            writer.write("Content-Type: image/x-icon\r\n");
+                            writer.write("Content-Length: " + output.toByteArray().length + "\r\n");
+                            writer.write("\r\n"); // 空行标识Header和Body的分隔
+                            writer.flush();
+                            out.write(output.toByteArray());
+                            out.flush();
+                        }
+
+                    }
+
+                }
+
+
+
+            }else{
+                String data="<html><body><h1>Hello, world!</h1></body></html>";
+                int length=data.getBytes(StandardCharsets.UTF_8).length;
+                writer.write("HTTP/1.0 200 OK\r\n");
+                writer.write("Connection: close\r\n");
+                writer.write("Content-Type: text/html\r\n");
+                writer.write("Content-Length: " + length + "\r\n");
+                writer.write("\r\n"); // 空行标识Header和Body的分隔
+                writer.write(data);
+                writer.flush();
+            }
+
         }
 
     }
