@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 // 注解配置，还可以xml 配置
-@WebServlet(urlPatterns = "/app/")
+@WebServlet(urlPatterns = "/app")
 public class HelloServlet extends HttpServlet {
 
     @Override
@@ -23,6 +23,9 @@ public class HelloServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         String name=req.getParameter("name");
         System.out.println("getRequestURL:"+req.getRequestURL());
+
+        String path = req.getRequestURI().substring(req.getContextPath().length());
+        System.out.println(String.format("path:%s",path));
 
 
         System.out.printf("getContextPath:  %s",req.getContextPath());
