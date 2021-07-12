@@ -6,4 +6,5 @@ package com.wp.learnjava.framework;
  * @Date: Create in 8:14 2021/7/12
  */
 public @interface GetMapping {
+    String value();
 }

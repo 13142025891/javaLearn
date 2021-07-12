@@ -9,10 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
@@ -26,18 +28,20 @@ import java.util.stream.Stream;
  * @Date: Create in 6:57 2021/7/12
  */
 
+@WebServlet(urlPatterns = "/")
 public class DispatcherServlet extends HttpServlet {
 
-    private final Logger logger= LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Map<String, GetDispatcher> getMappings = new HashMap<>();
 
     private Map<String, PostDispatcher> postMappings = new HashMap<>();
 
     // TODO: 可指定package并自动扫描:
-    private List<Class<?>> controllers =Arrays.asList(IndexController.class, UserController.class);
+    private List<Class<?>> controllers = Arrays.asList(IndexController.class, UserController.class);
 
     private ViewEngine viewEngine;
+
     @Override
     public void init() throws ServletException {
         logger.info("init {}...", getClass().getSimpleName());
@@ -63,8 +67,10 @@ public class DispatcherServlet extends HttpServlet {
                         }
                         String[] parameterNames = Arrays.stream(method.getParameters()).map(p -> p.getName())
                                 .toArray(String[]::new);
+
+
                         String path = method.getAnnotation(GetMapping.class).value();
-                        logger.info("Found GET: {} => {}", path, method);
+
                         this.getMappings.put(path, new GetDispatcher(controllerInstance, method, parameterNames,
                                 method.getParameterTypes()));
                     } else if (method.getAnnotation(PostMapping.class) != null) {
@@ -107,6 +113,7 @@ public class DispatcherServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         process(req, resp, this.postMappings);
     }
+
     private void process(HttpServletRequest req, HttpServletResponse resp,
                          Map<String, ? extends AbstractDispatcher> dispatcherMap) throws ServletException, IOException {
         resp.setContentType("text/html");
@@ -146,27 +153,99 @@ public class DispatcherServlet extends HttpServlet {
 }
 
 class GetDispatcher extends AbstractDispatcher {
+    public GetDispatcher(Object controllerInstance, Method method, String[] parameterNames, Class<?>[] parameterTypes) {
+        this.instance = controllerInstance;
+        this.method = method;
+        this.parameterNames = parameterNames;
+        this.parameterClasses = parameterTypes;
+    }
+
     @Override
     public ModelAndView invoke(HttpServletRequest request, HttpServletResponse response) throws IOException, ReflectiveOperationException {
-        return null;
+        Object[] arguments = new Object[parameterClasses.length];
+
+        for (int i = 0; i < parameterClasses.length; i++) {
+            String parameterName = parameterNames[i];
+            Class<?> parameterClass = parameterClasses[i];
+            if (parameterClass == HttpServletRequest.class) {
+                arguments[i] = request;
+            } else if (parameterClass == HttpServletResponse.class) {
+                arguments[i] = response;
+            } else if (parameterClass == HttpSession.class) {
+                arguments[i] = request.getSession();
+            } else if (parameterClass == int.class) {
+                arguments[i] = Integer.valueOf(getOrDefault(request, parameterName, "0"));
+            } else if (parameterClass == long.class) {
+                arguments[i] = Long.valueOf(getOrDefault(request, parameterName, "0"));
+            } else if (parameterClass == boolean.class) {
+                arguments[i] = Boolean.valueOf(getOrDefault(request, parameterName, "false"));
+            } else if (parameterClass == String.class) {
+                arguments[i] = getOrDefault(request, parameterName, "");
+            } else {
+                throw new RuntimeException("Missing handler for type:" + parameterClass);
+            }
+        }
+        return (ModelAndView) this.method.invoke(instance, arguments);
+    }
+
+    private String getOrDefault(HttpServletRequest request, String name, String defaultValue) {
+        String s = request.getParameter(name);
+        return s == null ? defaultValue : s;
     }
 
 
 }
 
-class PostDispatcher extends AbstractDispatcher{
+class PostDispatcher extends AbstractDispatcher {
+
+    ObjectMapper objectMapper;
+
+    public PostDispatcher(Object controllerInstance, Method method, Class<?>[] parameterTypes, ObjectMapper objectMapper) {
+
+        this.instance = controllerInstance;
+        this.method = method;
+        this.parameterClasses = parameterTypes;
+        this.objectMapper = objectMapper;
+
+
+    }
+
     @Override
     public ModelAndView invoke(HttpServletRequest request, HttpServletResponse response) throws IOException, ReflectiveOperationException {
-        return null;
+        Object[] arguments = new Object[parameterClasses.length];
+
+        for (int i = 0; i < parameterClasses.length; i++) {
+            Class<?> parameterClass = parameterClasses[i];
+            if (parameterClass == HttpServletRequest.class) {
+                arguments[i] = request;
+            } else if (parameterClass == HttpServletResponse.class) {
+                arguments[i] = response;
+            } else if (parameterClass == HttpSession.class) {
+                arguments[i] = request.getSession();
+            } else {
+
+                BufferedReader reader = request.getReader();
+                arguments[i] = this.objectMapper.readValue(reader, parameterClass);
+
+                throw new RuntimeException("Missing handler for type:" + parameterClass);
+            }
+        }
+        return (ModelAndView) this.method.invoke(instance, arguments);
+    }
+
+    private String getOrDefault(HttpServletRequest request, String name, String defaultValue) {
+        String s = request.getParameter(name);
+        return s == null ? defaultValue : s;
     }
 }
+
 abstract class AbstractDispatcher {
+    public Object instance; // Controller实例
+    public Method method; // Controller方法
+    public String[] parameterNames; // 方法参数名称
+    public Class<?>[] parameterClasses; // 方法参数类型
 
     public abstract ModelAndView invoke(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ReflectiveOperationException;
 }
 
-class ModelAndView {
-    Map<String, Object> model;
-    String view;
-}

@@ -19,10 +19,10 @@ public class Application {
         Tomcat tomcat=new Tomcat();
         tomcat.setPort(Integer.getInteger("port",8080));
         tomcat.getConnector();
-        Context ctx=tomcat.addWebapp("", new File("./servletL/src/main/webapp").getAbsolutePath());
+        Context ctx=tomcat.addWebapp("", new File("./my-mvc/src/main/webapp").getAbsolutePath());
         WebResourceRoot resources=new StandardRoot(ctx);
         resources.addPreResources(
-                new DirResourceSet(resources,"/WEB-INF/classes",new File("./servletL/target/classes").getAbsolutePath(), "/"));
+                new DirResourceSet(resources,"/WEB-INF/classes",new File("./my-mvc/target/classes").getAbsolutePath(), "/"));
 
         ctx.setResources(resources);
         tomcat.start();
