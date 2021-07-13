@@ -82,8 +82,6 @@
           <configuration>
             <compilerArgs>
               <arg>-parameters</arg>
-
-
             </compilerArgs>
           </configuration>
         </plugin>

@@ -4,6 +4,7 @@ package com.wp.learnjava.framework;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wp.learnjava.controller.IndexController;
+import com.wp.learnjava.controller.UploadController;
 import com.wp.learnjava.controller.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,8 @@ public class DispatcherServlet extends HttpServlet {
     private Map<String, PostDispatcher> postMappings = new HashMap<>();
 
     // TODO: 可指定package并自动扫描:
-    private List<Class<?>> controllers = Arrays.asList(IndexController.class, UserController.class);
+    private List<Class<?>> controllers = Arrays.asList(IndexController.class, UserController.class,
+            UploadController.class);
 
     private ViewEngine viewEngine;
 
