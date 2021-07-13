@@ -8,6 +8,7 @@ import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 
 import java.io.File;
+import java.security.DigestInputStream;
 
 /**
  * @Author: WuPna

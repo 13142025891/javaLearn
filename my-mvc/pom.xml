@@ -52,6 +52,15 @@
       <artifactId>pebble</artifactId>
       <version>${pebble.version}</version>
     </dependency>
+
+    <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-simple</artifactId>
+    <version>1.7.25</version>
+    <scope>compile</scope>
+
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -71,9 +80,11 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
           <configuration>
-            <!--<compilerArgs>
+            <compilerArgs>
               <arg>-parameters</arg>
-            </compilerArgs>-->
+
+
+            </compilerArgs>
           </configuration>
         </plugin>
         <plugin>

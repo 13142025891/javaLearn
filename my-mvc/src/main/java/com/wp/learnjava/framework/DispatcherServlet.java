@@ -44,7 +44,9 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+
         logger.info("init {}...", getClass().getSimpleName());
+        logger.debug("Looking for template in {}.", getClass().getSimpleName());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // 依次处理每个Controller:
@@ -226,8 +228,6 @@ class PostDispatcher extends AbstractDispatcher {
 
                 BufferedReader reader = request.getReader();
                 arguments[i] = this.objectMapper.readValue(reader, parameterClass);
-
-                throw new RuntimeException("Missing handler for type:" + parameterClass);
             }
         }
         return (ModelAndView) this.method.invoke(instance, arguments);
