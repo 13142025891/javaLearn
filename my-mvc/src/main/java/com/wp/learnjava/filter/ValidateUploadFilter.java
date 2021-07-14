@@ -101,6 +101,7 @@ class ReReadableHttpServletRequest extends HttpServletRequestWrapper{
 
     }
 
+    @Override
     public ServletInputStream getInputStream() throws IOException {
         if(open){
             throw new IllegalStateException("Cannot re-open input stream!");
@@ -141,6 +142,7 @@ class ReReadableHttpServletRequest extends HttpServletRequestWrapper{
     }
 
     // 返回Reader:
+    @Override
     public BufferedReader getReader() throws IOException {
         if (open) {
             throw new IllegalStateException("Cannot re-open reader!");
