@@ -50,7 +50,9 @@ public class ValidateUploadFilter implements Filter {
             return;
         }
 
-        filterChain.doFilter(servletRequest,servletResponse);
+
+
+        filterChain.doFilter(new ReReadableHttpServletRequest(req,output.toByteArray()),servletResponse);
 
     }
 
